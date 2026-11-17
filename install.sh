@@ -11,8 +11,10 @@ fi
 
 AUTHOR="glngadttya"
 
+echo "[1/5] Installing packages..."
 pkg install -y eza bat wget unzip chafa >/dev/null 2>&1 || true
 mkdir -p "$HOME/.termux"
+echo "[2/5] Writing colors & key layout..."
 
 # ---- muted, professional palette ----
 cat > "$HOME/.termux/colors.properties" <<'EOF'
@@ -46,14 +48,24 @@ extra-keys = [[ \
 EOF
 
 # ---- font: JetBrains Mono Nerd Font Mono (Regular) ----
+echo "[3/5] Font (JetBrains Mono Nerd Font Regular)..."
 FONT_DIR="$HOME/.cache/n30-font"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
 mkdir -p "$FONT_DIR"
-rm -f "$HOME/.termux/font.ttf"
-if wget -q -O "$FONT_DIR/jetbrains.zip" \
-    https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip; then
+if [ "${N30_SKIP_FONT:-0}" = "1" ]; then
+  echo "      skipped (N30_SKIP_FONT=1), font lama dipertahankan."
+elif wget -T 25 -t 2 --show-progress -O "$FONT_DIR/jetbrains.zip" "$FONT_URL"; then
   unzip -oq "$FONT_DIR/jetbrains.zip" -d "$FONT_DIR/out"
   FONT="$FONT_DIR/out/JetBrainsMonoNerdFontMono-Regular.ttf"
-  [ -f "$FONT" ] && cp "$FONT" "$HOME/.termux/font.ttf"
+  if [ -f "$FONT" ]; then
+    rm -f "$HOME/.termux/font.ttf"
+    cp "$FONT" "$HOME/.termux/font.ttf"
+    echo "      font installed."
+  else
+    echo "      file font tidak ditemukan, font lama dipertahankan."
+  fi
+else
+  echo "      download gagal/timeout, font lama dipertahankan."
 fi
 
 # ---- optional demo image for n30set ----
@@ -62,6 +74,7 @@ iVBORw0KGgoAAAANSUhEUgAAAKAAAABaCAMAAAAIGK1gAAAADFBMVEUQEBD1/wD/LmPo6OPxcDYAAAAA
 EOF
 
 # ---- shell config ----
+echo "[4/5] Updating ~/.bashrc..."
 touch "$HOME/.bashrc"
 sed -i '/# >>> N30-BRUT >>>/,/# <<< N30-BRUT <<</d' "$HOME/.bashrc"
 sed -i '/# >>> N30 >>>/,/# <<< N30 <<</d' "$HOME/.bashrc"
@@ -126,6 +139,7 @@ fi
 # <<< N30 <<<
 EOF
 
+echo "[5/5] Reloading settings..."
 command -v termux-reload-settings >/dev/null 2>&1 && termux-reload-settings || true
 
 printf '\n\033[38;5;109m────────────────────────────────\033[0m\n'
