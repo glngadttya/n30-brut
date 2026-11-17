@@ -1,52 +1,45 @@
-# N30-BRUT
+# N30
 
-Neo-brutalism styling for Termux. Hard edges, acid yellow, hot pink, concrete black, chunky Nerd Font, custom image banner. No soft corners.
+Clean, professional Termux setup. Muted palette, Nerd Font icons, simple prompt, welcome message.
 
-Termux has no native terminal background image, so images are rendered as ANSI blocks with `chafa`.
+Author: **glngadttya**
 
 ## Install
 
 ```sh
 pkg install -y git
-git clone https://github.com/OWNER/REPO.git
-cd REPO
+git clone https://github.com/glngadttya/n30-brut.git
+cd n30-brut
 bash install.sh
 ```
 
 Restart Termux after install.
 
-## What it changes
+## What it does
 
-- `~/.termux/colors.properties` - brutalist palette
-- `~/.termux/font.ttf` - JetBrains Mono Nerd Font Mono Bold
-- `~/.termux/termux.properties` - chunky extra keys
-- `~/.termux/brutal.png` - default demo image
-- `~/.bashrc` - block prompt, banner, aliases, helper functions
+- muted dark palette (Nord-ish, easy on the eyes)
+- JetBrains Mono Nerd Font Mono Regular
+- `ls` / `ll` / `la` / `lt` use `eza` with file & folder icons
+- `cat` uses `bat` for clean syntax highlighting
+- small welcome message with author
+- optional image via `n30set`
 
 ## Commands
 
 | Command | Fungsi |
 | --- | --- |
-| `brutimg` | Tampilkan gambar saat ini |
-| `brutset <file>` | Ganti gambar (png/jpg/webp) |
-| `brutoff` | Hapus tema + font, balik ke default |
-| `brutbanner` | Cetak ulang banner |
+| `n30img` | Tampilkan gambar saat ini |
+| `n30set <file>` | Ganti gambar |
+| `n30off` | Hapus tema, balik ke default |
 
-## Custom image
-
-```sh
-termux-setup-storage
-brutset ~/storage/shared/Pictures/foto.jpg
-```
-
-Banner muncul tiap buka Termux. Matikan:
+Tampilkan gambar tiap buka Termux:
 
 ```sh
-echo 'BRUT_STARTUP=0' >> ~/.bashrc
+echo 'N30_WALL=1' >> ~/.bashrc
 ```
 
 ## Uninstall
 
 ```sh
-brutoff && exit
+n30off && exit
 ```
